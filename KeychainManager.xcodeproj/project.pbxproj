@@ -12,6 +12,7 @@
 		D32C27CC2336798600548A8A /* KeychainManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D32C27C22336798600548A8A /* KeychainManager.framework */; };
 		D32C27D12336798600548A8A /* KeychainManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32C27D02336798600548A8A /* KeychainManagerTests.swift */; };
 		D32C27D32336798600548A8A /* KeychainManager.h in Headers */ = {isa = PBXBuildFile; fileRef = D32C27C52336798600548A8A /* KeychainManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D32C27DD23367FAE00548A8A /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32C27DC23367FAE00548A8A /* KeychainManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,7 @@
 		D32C27CB2336798600548A8A /* KeychainManagerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KeychainManagerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D32C27D02336798600548A8A /* KeychainManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerTests.swift; sourceTree = "<group>"; };
 		D32C27D22336798600548A8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D32C27DC23367FAE00548A8A /* KeychainManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,7 +70,6 @@
 				4862E2A8DB4C2C117397F7A6 /* Pods-KeychainManagerTests.debug.xcconfig */,
 				54352968D8E29C4F93231522 /* Pods-KeychainManagerTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -104,6 +105,7 @@
 		D32C27C42336798600548A8A /* KeychainManager */ = {
 			isa = PBXGroup;
 			children = (
+				D32C27DC23367FAE00548A8A /* KeychainManager.swift */,
 				D32C27C52336798600548A8A /* KeychainManager.h */,
 				D32C27C62336798600548A8A /* Info.plist */,
 			);
@@ -183,6 +185,7 @@
 				TargetAttributes = {
 					D32C27C12336798600548A8A = {
 						CreatedOnToolsVersion = 10.3;
+						LastSwiftMigration = 1030;
 					};
 					D32C27CA2336798600548A8A = {
 						CreatedOnToolsVersion = 10.3;
@@ -276,6 +279,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D32C27DD23367FAE00548A8A /* KeychainManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,6 +428,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 67756B283DD00F60ED14DF24 /* Pods-KeychainManager.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -442,6 +447,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.keychainmanager.KeychainManager;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -451,6 +457,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C012C5C180AE3026E27DFA25 /* Pods-KeychainManager.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -478,6 +485,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4862E2A8DB4C2C117397F7A6 /* Pods-KeychainManagerTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2655J94PWC;
 				INFOPLIST_FILE = KeychainManagerTests/Info.plist;
@@ -497,6 +505,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 54352968D8E29C4F93231522 /* Pods-KeychainManagerTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2655J94PWC;
 				INFOPLIST_FILE = KeychainManagerTests/Info.plist;

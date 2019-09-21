@@ -841,12 +841,19 @@ class KeychainError: LocalizedError {
     
     var code: OSStatus = noErr
     var description: String {
-        if let errorMessageString = SecCopyErrorMessageString(code, nil) as String? {
-            return errorMessageString
+        
+        if #available(iOS 11.3, *) {
+            if let errorMessageString = SecCopyErrorMessageString(code, nil) as String? {
+                return errorMessageString
+            }
+            else {
+                return "Unknown error"
+            }
         }
         else {
-            return "Unknown error"
+            return ""
         }
+        
     }
     
     convenience init(code: OSStatus){
