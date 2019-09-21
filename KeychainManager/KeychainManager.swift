@@ -113,7 +113,7 @@ public class KeychainManager: NSObject {
 
 extension KeychainManager {
     
-    @objc class func servers(debug: Bool = false) -> [String] {
+    @objc public class func servers(debug: Bool = false) -> [String] {
         
         let query: Dictionary<String, AnyObject> = [
             String(kSecClass): kSecClassInternetPassword,
