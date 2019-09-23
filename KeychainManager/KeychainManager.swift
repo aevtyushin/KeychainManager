@@ -8,7 +8,7 @@
 import Foundation
 
 @objc(KeychainManager)
-public class KeychainManager: NSObject {
+open class KeychainManager: NSObject {
 
     @objc public enum ItemClass: UInt {
         case genericPassword = 1
