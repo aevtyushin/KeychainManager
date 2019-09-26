@@ -89,6 +89,8 @@ open class KeychainManager: NSObject {
         
     }
     
+    @objc public var accessGroup: String?
+    
     @objc public var allowDebugAccounts = false
     @objc public var allowDebugValues = false
     @objc public var allowDebugCerificates = false
@@ -385,6 +387,10 @@ extension KeychainManager {
             String(kSecAttrAccount): account as CFString,
         ]
         
+        if let accessGroup = accessGroup {
+            query[String(kSecAttrAccessGroup)] = accessGroup as CFString
+        }
+        
         if itemClass == .internetPassword {
             query[String(kSecAttrProtocol)] = secAttrProtocol
             query[String(kSecAttrAuthenticationType)] = secAttrAuthenticationType
@@ -421,6 +427,9 @@ extension KeychainManager {
         
         //
         if let options = options {
+            if let accessGroup = options[KeychainValueOption.accessGroup.rawValue] as? String, !accessGroup.isEmpty {
+                query[String(kSecAttrAccessGroup)] = accessGroup as CFString
+            }
             if let operationPrompt = options[KeychainValueOption.useOperationPrompt.rawValue] as? String, !operationPrompt.isEmpty {
                 query[String(kSecUseOperationPrompt)] = operationPrompt as CFString
             }
