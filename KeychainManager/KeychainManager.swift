@@ -352,10 +352,12 @@ extension KeychainManager {
 extension KeychainManager {
     
     @objc public enum KeychainValueOption: UInt {
-        case accessGroup = 1
-        case accessControlFlags = 2
-        case synchronizable = 3
-        case useOperationPrompt = 4
+        case server = 1
+        case account = 2
+        case accessGroup = 3
+        case accessControlFlags = 4
+        case synchronizable = 5
+        case useOperationPrompt = 6
     }
     
     private var debugValues: Bool {
@@ -403,13 +405,24 @@ extension KeychainManager {
     
     private func valueIsExist(key: String) -> Bool {
         
-        return value(for: key) != nil
+        return dataValue(for: key) != nil
+        
+    }
+    
+    @objc public func boolValue(for key: String, options: [UInt:AnyObject]? = nil) -> Bool {
+        
+        if let value = stringValue(for: key, options: options) {
+            return NSString(string: value).boolValue
+        }
+        else {
+            return false
+        }
         
     }
     
     @objc public func stringValue(for key: String, options: [UInt:AnyObject]? = nil) -> String? {
         
-        if let value = value(for: key, options: options) {
+        if let value = dataValue(for: key, options: options) {
             return String(data: value, encoding: .utf8)
         }
         else {
@@ -418,7 +431,7 @@ extension KeychainManager {
         
     }
     
-    @objc public func value(for key: String, options: [UInt:AnyObject]? = nil) -> Data? {
+    @objc public func dataValue(for key: String, options: [UInt:AnyObject]? = nil) -> Data? {
         
         var query = defaultValueQuery
         query[String(secAttKey)] = key as CFString
@@ -463,15 +476,24 @@ extension KeychainManager {
         
     }
     
-    @objc public func setStringValue(value: String, for key: String, options: [UInt:AnyObject]? = nil) {
+    @objc public func setBoolValue(value: Bool, for key: String, options: [UInt:AnyObject]? = nil) {
         
-        if let data = value.data(using: .utf8) {
-            setValue(value: data, for: key, options: options)
-        }
+        setStringValue(value: value.description, for: key, options: options)
         
     }
     
-    @objc public func setValue(value: Data, for key: String, options: [UInt:AnyObject]? = nil) {
+    @objc public func setStringValue(value: String?, for key: String, options: [UInt:AnyObject]? = nil) {
+        
+        setValue(value: value?.data(using: .utf8), for: key, options: options)
+        
+    }
+    
+    @objc public func setValue(value: Data?, for key: String, options: [UInt:AnyObject]? = nil) {
+        
+        guard let value = value else {
+            deleteValue(for: key)
+            return
+        }
         
         if valueIsExist(key: key) {
             updateValue(value: value, for: key)
