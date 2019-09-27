@@ -13,6 +13,14 @@
 		D32C27D12336798600548A8A /* KeychainManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32C27D02336798600548A8A /* KeychainManagerTests.swift */; };
 		D32C27D32336798600548A8A /* KeychainManager.h in Headers */ = {isa = PBXBuildFile; fileRef = D32C27C52336798600548A8A /* KeychainManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D32C27DD23367FAE00548A8A /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32C27DC23367FAE00548A8A /* KeychainManager.swift */; };
+		D3B30845233E418900B1B4C1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B30844233E418900B1B4C1 /* AppDelegate.swift */; };
+		D3B30847233E418900B1B4C1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B30846233E418900B1B4C1 /* ViewController.swift */; };
+		D3B3084A233E418900B1B4C1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3B30848233E418900B1B4C1 /* Main.storyboard */; };
+		D3B3084C233E418A00B1B4C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3B3084B233E418A00B1B4C1 /* Assets.xcassets */; };
+		D3B3084F233E418A00B1B4C1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3B3084D233E418A00B1B4C1 /* LaunchScreen.storyboard */; };
+		D3B30854233E41A400B1B4C1 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32C27DC23367FAE00548A8A /* KeychainManager.swift */; };
+		D3D63A62233E47E500473183 /* KeychainManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D32C27C22336798600548A8A /* KeychainManager.framework */; };
+		D3D63A63233E47E500473183 /* KeychainManager.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D32C27C22336798600548A8A /* KeychainManager.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,7 +31,28 @@
 			remoteGlobalIDString = D32C27C12336798600548A8A;
 			remoteInfo = KeychainManager;
 		};
+		D3D63A64233E47E500473183 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D32C27B92336798600548A8A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D32C27C12336798600548A8A;
+			remoteInfo = KeychainManager;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D3D63A66233E47E500473183 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D3D63A63233E47E500473183 /* KeychainManager.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4862E2A8DB4C2C117397F7A6 /* Pods-KeychainManagerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KeychainManagerTests.debug.xcconfig"; path = "Target Support Files/Pods-KeychainManagerTests/Pods-KeychainManagerTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -39,6 +68,14 @@
 		D32C27D02336798600548A8A /* KeychainManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerTests.swift; sourceTree = "<group>"; };
 		D32C27D22336798600548A8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D32C27DC23367FAE00548A8A /* KeychainManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		D3B30842233E418900B1B4C1 /* KeychainManagerdemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KeychainManagerdemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3B30844233E418900B1B4C1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		D3B30846233E418900B1B4C1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		D3B30849233E418900B1B4C1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		D3B3084B233E418A00B1B4C1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D3B3084E233E418A00B1B4C1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		D3B30850233E418A00B1B4C1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D3B30856233E438000B1B4C1 /* KeychainManagerdemoApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KeychainManagerdemoApp.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +93,14 @@
 			files = (
 				D32C27CC2336798600548A8A /* KeychainManager.framework in Frameworks */,
 				788F7E700661297AAFD9C47E /* Pods_KeychainManagerTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3B3083F233E418900B1B4C1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3D63A62233E47E500473183 /* KeychainManager.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +132,7 @@
 			children = (
 				D32C27C42336798600548A8A /* KeychainManager */,
 				D32C27CF2336798600548A8A /* KeychainManagerTests */,
+				D3B30843233E418900B1B4C1 /* KeychainManagerdemoApp */,
 				D32C27C32336798600548A8A /* Products */,
 				0B418540C226CB441F13B6CA /* Pods */,
 				A400CE64BE8077B1868279E1 /* Frameworks */,
@@ -98,6 +144,7 @@
 			children = (
 				D32C27C22336798600548A8A /* KeychainManager.framework */,
 				D32C27CB2336798600548A8A /* KeychainManagerTests.xctest */,
+				D3B30842233E418900B1B4C1 /* KeychainManagerdemoApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -119,6 +166,20 @@
 				D32C27D22336798600548A8A /* Info.plist */,
 			);
 			path = KeychainManagerTests;
+			sourceTree = "<group>";
+		};
+		D3B30843233E418900B1B4C1 /* KeychainManagerdemoApp */ = {
+			isa = PBXGroup;
+			children = (
+				D3B30856233E438000B1B4C1 /* KeychainManagerdemoApp.entitlements */,
+				D3B30844233E418900B1B4C1 /* AppDelegate.swift */,
+				D3B30846233E418900B1B4C1 /* ViewController.swift */,
+				D3B30848233E418900B1B4C1 /* Main.storyboard */,
+				D3B3084B233E418A00B1B4C1 /* Assets.xcassets */,
+				D3B3084D233E418A00B1B4C1 /* LaunchScreen.storyboard */,
+				D3B30850233E418A00B1B4C1 /* Info.plist */,
+			);
+			path = KeychainManagerdemoApp;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -173,6 +234,25 @@
 			productReference = D32C27CB2336798600548A8A /* KeychainManagerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		D3B30841233E418900B1B4C1 /* KeychainManagerdemoApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3B30851233E418A00B1B4C1 /* Build configuration list for PBXNativeTarget "KeychainManagerdemoApp" */;
+			buildPhases = (
+				D3B3083E233E418900B1B4C1 /* Sources */,
+				D3B3083F233E418900B1B4C1 /* Frameworks */,
+				D3B30840233E418900B1B4C1 /* Resources */,
+				D3D63A66233E47E500473183 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D3D63A65233E47E500473183 /* PBXTargetDependency */,
+			);
+			name = KeychainManagerdemoApp;
+			productName = KeychainManagerdemoApp;
+			productReference = D3B30842233E418900B1B4C1 /* KeychainManagerdemoApp.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -190,6 +270,20 @@
 					D32C27CA2336798600548A8A = {
 						CreatedOnToolsVersion = 10.3;
 					};
+					D3B30841233E418900B1B4C1 = {
+						CreatedOnToolsVersion = 10.3;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 0;
+							};
+							com.apple.DataProtection = {
+								enabled = 1;
+							};
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
+					};
 				};
 			};
 			buildConfigurationList = D32C27BC2336798600548A8A /* Build configuration list for PBXProject "KeychainManager" */;
@@ -198,6 +292,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = D32C27B82336798600548A8A;
 			productRefGroup = D32C27C32336798600548A8A /* Products */;
@@ -206,6 +301,7 @@
 			targets = (
 				D32C27C12336798600548A8A /* KeychainManager */,
 				D32C27CA2336798600548A8A /* KeychainManagerTests */,
+				D3B30841233E418900B1B4C1 /* KeychainManagerdemoApp */,
 			);
 		};
 /* End PBXProject section */
@@ -222,6 +318,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3B30840233E418900B1B4C1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3B3084F233E418A00B1B4C1 /* LaunchScreen.storyboard in Resources */,
+				D3B3084C233E418A00B1B4C1 /* Assets.xcassets in Resources */,
+				D3B3084A233E418900B1B4C1 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,6 +397,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D3B3083E233E418900B1B4C1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3B30847233E418900B1B4C1 /* ViewController.swift in Sources */,
+				D3B30854233E41A400B1B4C1 /* KeychainManager.swift in Sources */,
+				D3B30845233E418900B1B4C1 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -299,7 +415,31 @@
 			target = D32C27C12336798600548A8A /* KeychainManager */;
 			targetProxy = D32C27CD2336798600548A8A /* PBXContainerItemProxy */;
 		};
+		D3D63A65233E47E500473183 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D32C27C12336798600548A8A /* KeychainManager */;
+			targetProxy = D3D63A64233E47E500473183 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		D3B30848233E418900B1B4C1 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D3B30849233E418900B1B4C1 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		D3B3084D233E418A00B1B4C1 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D3B3084E233E418A00B1B4C1 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		D32C27D42336798600548A8A /* Debug */ = {
@@ -428,6 +568,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 67756B283DD00F60ED14DF24 /* Pods-KeychainManager.debug.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
@@ -457,6 +598,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C012C5C180AE3026E27DFA25 /* Pods-KeychainManager.release.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
@@ -521,6 +663,50 @@
 			};
 			name = Release;
 		};
+		D3B30852233E418A00B1B4C1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = KeychainManagerdemoApp/KeychainManagerdemoApp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2655J94PWC;
+				ENTITLEMENTS_REQUIRED = YES;
+				INFOPLIST_FILE = KeychainManagerdemoApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.keychainmanager.demoapp.KeychainManagerdemoApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D3B30853233E418A00B1B4C1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = KeychainManagerdemoApp/KeychainManagerdemoApp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2655J94PWC;
+				ENTITLEMENTS_REQUIRED = YES;
+				INFOPLIST_FILE = KeychainManagerdemoApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.keychainmanager.demoapp.KeychainManagerdemoApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -547,6 +733,15 @@
 			buildConfigurations = (
 				D32C27DA2336798600548A8A /* Debug */,
 				D32C27DB2336798600548A8A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D3B30851233E418A00B1B4C1 /* Build configuration list for PBXNativeTarget "KeychainManagerdemoApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3B30852233E418A00B1B4C1 /* Debug */,
+				D3B30853233E418A00B1B4C1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
