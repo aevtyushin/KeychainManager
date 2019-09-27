@@ -89,6 +89,7 @@ open class KeychainManager: NSObject {
         
     }
     
+    @objc public var teamID: String?
     @objc public var accessGroup: String?
     
     @objc public var allowDebugAccounts = false
@@ -389,7 +390,10 @@ extension KeychainManager {
             String(kSecAttrAccount): account as CFString,
         ]
         
-        if let accessGroup = accessGroup {
+        if var accessGroup = accessGroup {
+            if let teamID = teamID {
+                accessGroup = teamID+"."+accessGroup
+            }
             query[String(kSecAttrAccessGroup)] = accessGroup as CFString
         }
         
@@ -453,7 +457,10 @@ extension KeychainManager {
         
         //
         if let options = options {
-            if let accessGroup = options[KeychainValueOption.accessGroup.rawValue] as? String, !accessGroup.isEmpty {
+            if var accessGroup = options[KeychainValueOption.accessGroup.rawValue] as? String, !accessGroup.isEmpty {
+                if let teamID = teamID {
+                    accessGroup = teamID+"."+accessGroup
+                }
                 query[String(kSecAttrAccessGroup)] = accessGroup as CFString
             }
             if let operationPrompt = options[KeychainValueOption.useOperationPrompt.rawValue] as? String, !operationPrompt.isEmpty {
@@ -538,7 +545,10 @@ extension KeychainManager {
         query[String(kSecValueData)] = value as AnyObject
         
         if let options = options {
-            if let accessGroup = options[KeychainValueOption.accessGroup.rawValue] as? String, !accessGroup.isEmpty {
+            if var accessGroup = options[KeychainValueOption.accessGroup.rawValue] as? String, !accessGroup.isEmpty {
+                if let teamID = teamID {
+                    accessGroup = teamID+"."+accessGroup
+                }
                 query[String(kSecAttrAccessGroup)] = accessGroup as CFString
             }
             if itemClass == .genericPassword,
@@ -580,7 +590,10 @@ extension KeychainManager {
         ]
         
         if let options = options {
-            if let accessGroup = options[KeychainValueOption.accessGroup.rawValue] as? String, !accessGroup.isEmpty {
+            if var accessGroup = options[KeychainValueOption.accessGroup.rawValue] as? String, !accessGroup.isEmpty {
+                if let teamID = teamID {
+                    accessGroup = teamID+"."+accessGroup
+                }
                 attributesForUpdate[String(kSecAttrAccessGroup)] = accessGroup as CFString
             }
             if itemClass == .genericPassword,
