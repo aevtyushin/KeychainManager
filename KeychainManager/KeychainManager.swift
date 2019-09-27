@@ -420,6 +420,19 @@ extension KeychainManager {
         
     }
     
+    @objc public func dateValue(for key: String, options: [UInt:AnyObject]? = nil) -> Date? {
+        
+        if let value = stringValue(for: key, options: options) {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "y-MM-dd H:m:ss.SSSS"
+            return formatter.date(from: value)
+        }
+        else {
+            return nil
+        }
+        
+    }
+    
     @objc public func stringValue(for key: String, options: [UInt:AnyObject]? = nil) -> String? {
         
         if let value = dataValue(for: key, options: options) {
@@ -479,6 +492,19 @@ extension KeychainManager {
     @objc public func setBoolValue(value: Bool, for key: String, options: [UInt:AnyObject]? = nil) {
         
         setStringValue(value: value.description, for: key, options: options)
+        
+    }
+        
+    @objc public func setDateValue(value: Date?, for key: String, options: [UInt:AnyObject]? = nil) {
+        
+        if let value = value {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "y-MM-dd H:m:ss.SSSS"
+            setStringValue(value: formatter.string(from: value), for: key)
+        }
+        else {
+            setValue(value: nil, for: key, options: options)
+        }
         
     }
     
