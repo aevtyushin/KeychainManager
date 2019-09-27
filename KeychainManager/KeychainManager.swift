@@ -403,9 +403,9 @@ extension KeychainManager {
         
     }
     
-    private func valueIsExist(key: String) -> Bool {
+    private func valueIsExist(key: String, options: [UInt:AnyObject]? = nil) -> Bool {
         
-        return dataValue(for: key) != nil
+        return dataValue(for: key, options: options) != nil
         
     }
     
@@ -521,7 +521,7 @@ extension KeychainManager {
             return
         }
         
-        if valueIsExist(key: key) {
+        if valueIsExist(key: key, options: options) {
             updateValue(value: value, for: key)
         }
         else{
