@@ -20,8 +20,6 @@ class ViewController: UIViewController {
 
     func testAccessGroup() {
         
-        
-        
         let keychainManager = KeychainManager()
         
         let allValuesAndKeys = keychainManager.allValuesAndKeys()
