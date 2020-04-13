@@ -113,7 +113,6 @@ open class KeychainManager: NSObject {
 }
 
 //MARK: - Servers
-
 extension KeychainManager {
     
     @objc public class func servers(debug: Bool = false) -> [String] {
@@ -130,7 +129,7 @@ extension KeychainManager {
         var servers = [String]()
         if status == errSecSuccess {
             if let items = result as? [[String: Any]] {
-                for var item in items {
+                for item in items {
                     if let server = item[String(kSecAttrServer)] as? String, !servers.contains(server) {
                         servers.append(server)
                     }
@@ -301,7 +300,7 @@ extension KeychainManager {
         var accounts = [String]()
         if status == errSecSuccess {
             if let items = result as? [[String: Any]] {
-                for var item in items {
+                for item in items {
                     if let account = item[String(kSecAttrAccount)] as? String, !isTechAccount(account) {
                         accounts.append(account)
                     }
@@ -463,6 +462,13 @@ extension KeychainManager {
                 }
                 query[String(kSecAttrAccessGroup)] = accessGroup as CFString
             }
+            if let accessControlFlags = options[KeychainValueOption.accessControlFlags.rawValue] as? SecAccessControlCreateFlags {
+                query.removeValue(forKey: String(kSecAttrAccessible))
+                query[String(kSecAttrAccessControl)] = SecAccessControlCreateWithFlags(kCFAllocatorDefault,
+                                                                                       secAttrAccessible,
+                                                                                       accessControlFlags,
+                                                                                       nil)!
+            }
             if let operationPrompt = options[KeychainValueOption.useOperationPrompt.rawValue] as? String, !operationPrompt.isEmpty {
                 query[String(kSecUseOperationPrompt)] = operationPrompt as CFString
             }
@@ -474,10 +480,10 @@ extension KeychainManager {
         if debugValues {
             if status == errSecSuccess {
                 if let valueRef = valueRef as? Data, let valueAsString = String(data: valueRef, encoding: .utf8) {
-                    print("["+account+"] get value for key '"+key+"' , value = '"+valueAsString+"'")
+                    debugPrint("["+account+"] get value for key '"+key+"' , value = '"+valueAsString+"'")
                 }
                 else {
-                    print("["+account+"] get value for key '"+key+"'")
+                    debugPrint("["+account+"] get value for key '"+key+"'")
                 }
             }
             else {
@@ -551,8 +557,7 @@ extension KeychainManager {
                 }
                 query[String(kSecAttrAccessGroup)] = accessGroup as CFString
             }
-            if itemClass == .genericPassword,
-                let accessControlFlags = options[KeychainValueOption.accessControlFlags.rawValue] as? SecAccessControlCreateFlags {
+            if let accessControlFlags = options[KeychainValueOption.accessControlFlags.rawValue] as? SecAccessControlCreateFlags {
                 query.removeValue(forKey: String(kSecAttrAccessible))
                 query[String(kSecAttrAccessControl)] = SecAccessControlCreateWithFlags(kCFAllocatorDefault,
                                                                                        secAttrAccessible,
@@ -569,12 +574,12 @@ extension KeychainManager {
         if debugValues {
             if status == errSecSuccess {
                 let valueAsString = String(data: value, encoding: .utf8) ?? ""
-                print("["+account+"] add value for key '"+key+"' , value = '"+valueAsString+"'")
+                debugPrint("["+account+"] add value for key '"+key+"' , value = '"+valueAsString+"'")
             }
             else {
                 let error = KeychainError(code: status)
                 let errorDescription = "("+String(error.code)+") "+error.description
-                print("["+account+"] can't add value for key '"+key+"' , error = "+errorDescription)
+                debugPrint("["+account+"] can't add value for key '"+key+"' , error = "+errorDescription)
             }
         }
         
@@ -596,8 +601,7 @@ extension KeychainManager {
                 }
                 attributesForUpdate[String(kSecAttrAccessGroup)] = accessGroup as CFString
             }
-            if itemClass == .genericPassword,
-                let accessControlFlags = options[KeychainValueOption.accessControlFlags.rawValue] as? SecAccessControlCreateFlags {
+            if let accessControlFlags = options[KeychainValueOption.accessControlFlags.rawValue] as? SecAccessControlCreateFlags {
                 attributesForUpdate.removeValue(forKey: String(kSecAttrAccessible))
                 attributesForUpdate[String(kSecAttrAccessControl)] = SecAccessControlCreateWithFlags(kCFAllocatorDefault,
                                                                                        secAttrAccessible,
@@ -614,12 +618,12 @@ extension KeychainManager {
         if debugValues {
             if status == errSecSuccess {
                 let valueAsString = String(data: value, encoding: .utf8) ?? ""
-                print("["+account+"] update value for key '"+key+"' , value = '"+valueAsString+"'")
+                debugPrint("["+account+"] update value for key '"+key+"' , value = '"+valueAsString+"'")
             }
             else {
                 let error = KeychainError(code: status)
                 let errorDescription = "("+String(error.code)+") "+error.description
-                print("["+account+"] can't update value for key '"+key+"' , error = "+errorDescription)
+                debugPrint("["+account+"] can't update value for key '"+key+"' , error = "+errorDescription)
             }
         }
         
@@ -637,12 +641,12 @@ extension KeychainManager {
         
         if debugValues {
             if status == errSecSuccess {
-                print("["+account+"] delete value for key '"+key+"'")
+                debugPrint("["+account+"] delete value for key '"+key+"'")
             }
             else {
                 let error = KeychainError(code: status)
                 let errorDescription = "("+String(error.code)+") "+error.description
-                print("["+account+"] can't delete value for key '"+key+"' , error = "+errorDescription)
+                debugPrint("["+account+"] can't delete value for key '"+key+"' , error = "+errorDescription)
             }
         }
         
@@ -661,7 +665,7 @@ extension KeychainManager {
         var values = [String:String]()
         if status == errSecSuccess {
             if let items = result as? [[String: Any]] {
-                for var item in items {
+                for item in items {
                     if let key = item[String(secAttKey)] as? String,
                         let value = item[String(kSecValueData)] as? Data, let valueAsString = String(data: value, encoding: .utf8) {
                         values[key] = valueAsString
@@ -689,12 +693,12 @@ extension KeychainManager {
         
         if debugValues {
             if status == errSecSuccess {
-                print("["+account+"] delete all values")
+                debugPrint("["+account+"] delete all values")
             }
             else {
                 let error = KeychainError(code: status)
                 let errorDescription = "("+String(error.code)+") "+error.description
-                print("["+account+"] can't delete all values , error = "+errorDescription)
+                debugPrint("["+account+"] can't delete all values , error = "+errorDescription)
             }
         }
         
@@ -725,12 +729,12 @@ extension KeychainManager {
         if debug {
             let secClassAsString = secClass as String
             if status == errSecSuccess {
-                print("["+String(describing: self)+"] delete all values for secClass '"+secClassAsString+"'")
+                debugPrint("["+String(describing: self)+"] delete all values for secClass '"+secClassAsString+"'")
             }
             else {
                 let error = KeychainError(code: status)
                 let errorDescription = "("+String(error.code)+") "+error.description
-                print("["+String(describing: self)+"] can't delete all values for secClass '"+secClassAsString+"', error = "+errorDescription)
+                debugPrint("["+String(describing: self)+"] can't delete all values for secClass '"+secClassAsString+"', error = "+errorDescription)
             }
         }
         
@@ -750,24 +754,65 @@ extension KeychainManager {
         #endif
 
     }
-
-    private func isSecIdentityExist() -> Bool {
-        return secIdentity() != nil
+    
+    private var defaultSecIdentityQuery: Dictionary<String, AnyObject> {
+        
+        var query: Dictionary<String, AnyObject> = [
+            String(kSecClass): kSecClassIdentity,
+            //String(kSecAttrAccessible): secAttrAccessible,
+            String(kSecAttrApplicationTag): account as CFString,
+        ]
+        
+        if var accessGroup = accessGroup {
+            if let teamID = teamID {
+                accessGroup = teamID+"."+accessGroup
+            }
+            query[String(kSecAttrAccessGroup)] = accessGroup as CFString
+        }
+        
+        if itemClass == .internetPassword {
+            query[String(kSecAttrApplicationLabel)] = server as CFString
+        }
+        
+        return query
+        
     }
 
-    private func secIdentity() -> SecIdentity? {
+    private func isSecIdentityExist(options: [UInt:AnyObject]? = nil) -> Bool {
+        return secIdentity(options: options) != nil
+    }
 
-        let query: Dictionary<String, AnyObject> = [
-            String(kSecClass): kSecClassIdentity,
-            String(kSecReturnRef): kCFBooleanTrue,
-            String(kSecAttrLabel): server as CFString,
-        ]
+    private func secIdentity(options: [UInt:AnyObject]? = nil) -> SecIdentity? {
 
-        var secIdentity: CFTypeRef?
-        let status = SecItemCopyMatching(query as CFDictionary, &secIdentity)
+        var query = defaultSecIdentityQuery
+        query[String(kSecReturnRef)] = kCFBooleanTrue
+        //query[String(kSecMatchLimit)] = kSecMatchLimitOne
+        
+        if let options = options {
+            if var accessGroup = options[KeychainValueOption.accessGroup.rawValue] as? String, !accessGroup.isEmpty {
+                if let teamID = teamID {
+                    accessGroup = teamID+"."+accessGroup
+                }
+                query[String(kSecAttrAccessGroup)] = accessGroup as CFString
+            }
+        }
 
-        if status == errSecSuccess, secIdentity != nil {
-            return (secIdentity as! SecIdentity)
+        var secIdentityRef: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &secIdentityRef)
+
+        if debugCertificate {
+            if status == errSecSuccess {
+                debugPrint("["+account+"] get sec identity")
+            }
+            else {
+                let error = KeychainError(code: status)
+                let errorDescription = "("+String(error.code)+") "+error.description
+                debugPrint("["+account+"] can't get sec identity , error = "+errorDescription)
+            }
+        }
+                
+        if status == errSecSuccess, secIdentityRef != nil {
+            return (secIdentityRef as! SecIdentity)
         }
         else{
             return nil
@@ -775,39 +820,71 @@ extension KeychainManager {
 
     }
 
-    private func persistentRefForSecIdentity() -> CFTypeRef? {
+//    private func persistentRefForSecIdentity() -> CFTypeRef? {
+//
+//        var query = defaultSecIdentityQuery
+//        query[String(kSecReturnPersistentRef)] = kCFBooleanTrue
+//        query[String(kSecMatchLimit)] = kSecMatchLimitOne
+//
+//        var persistentRef: CFTypeRef?
+//        let status = SecItemCopyMatching(query as CFDictionary, &persistentRef)
+//
+//        if debugCertificate {
+//            if status == errSecSuccess {
+//                debugPrint("["+account+"] get persistent ref for sec identity")
+//            }
+//            else {
+//                let error = KeychainError(code: status)
+//                let errorDescription = "("+String(error.code)+") "+error.description
+//                debugPrint("["+account+"] can't get persistent ref for sec identity , error = "+errorDescription)
+//            }
+//        }
+//
+//        return persistentRef
+//
+//    }
 
-        let query: Dictionary<String, AnyObject> = [
-            String(kSecClass): kSecClassIdentity,
-            String(kSecReturnPersistentRef): kCFBooleanTrue,
-            String(kSecAttrLabel): server as CFString,
-        ]
-
-        var persistentRef: CFTypeRef?
-        let status = SecItemCopyMatching(query as CFDictionary, &persistentRef)
-
-        print("persistentRefForIdentity - "+String(status))
-
-        return persistentRef
-
-    }
-
-    private func addSecIdentity(secIdentity: SecIdentity) -> OSStatus {
+    private func addSecIdentity(secIdentity: SecIdentity, options: [UInt:AnyObject]? = nil) -> OSStatus {
 
         //https://stackoverflow.com/questions/11614047/what-makes-a-keychain-item-unique-in-ios
-
         //few Identities https://forums.developer.apple.com/thread/69642
 
-        let query: Dictionary<String, AnyObject> = [
-            //                String(kSecClass): kSecClassIdentity,
-            //                String(kSecAttrAccessible): secAttrAccessible,
-            String(kSecAttrLabel): server as CFString,
-            String(kSecReturnPersistentRef): kCFBooleanTrue,
-            String(kSecValueRef): secIdentity ,
-        ]
+//        var query: Dictionary<String, AnyObject> = [
+//            //                String(kSecClass): kSecClassIdentity,
+//            //                String(kSecAttrAccessible): secAttrAccessible,
+//            //String(kSecAttrLabel): server as CFString,
+//            String(kSecReturnPersistentRef): kCFBooleanTrue,
+//            String(kSecValueRef): secIdentity ,
+//        ]
+        
+        var query = defaultSecIdentityQuery
+        query.removeValue(forKey: String(kSecClass))
+        query[String(kSecReturnPersistentRef)] = kCFBooleanTrue
+        query[String(kSecValueRef)] = secIdentity
+        
+        if let options = options {
+            if var accessGroup = options[KeychainValueOption.accessGroup.rawValue] as? String, !accessGroup.isEmpty {
+                if let teamID = teamID {
+                    accessGroup = teamID+"."+accessGroup
+                }
+                query[String(kSecAttrAccessGroup)] = accessGroup as CFString
+            }
+        }
+        
         var persistentRef: CFTypeRef?
         let status = SecItemAdd(query as CFDictionary, &persistentRef)
 
+        if debugCertificate {
+            if status == errSecSuccess {
+                debugPrint("["+account+"] add sec identity")
+            }
+            else {
+                let error = KeychainError(code: status)
+                let errorDescription = "("+String(error.code)+") "+error.description
+                debugPrint("["+account+"] can't add sec identity , error = "+errorDescription)
+            }
+        }
+        
         return status
 
     }
@@ -825,6 +902,17 @@ extension KeychainManager {
 
         status = SecPKCS12Import(data as NSData, (options as CFDictionary), &items)
 
+        if debugCertificate {
+            if status == errSecSuccess {
+                debugPrint("["+account+"] extract sec identity from data")
+            }
+            else {
+                let error = KeychainError(code: status)
+                let errorDescription = "("+String(error.code)+") "+error.description
+                debugPrint("["+account+"] can't extarct sec identity from data , error = "+errorDescription)
+            }
+        }
+        
         if status == errSecSuccess {
             let secIdentities = items as! [[String:Any]]
             if let secIdentity = secIdentities[0][kSecImportItemIdentity as String] {
@@ -835,72 +923,104 @@ extension KeychainManager {
         return nil
 
     }
+    
+    @objc public func allCertificates() -> [String:String] {
+        
+        var query = defaultSecIdentityQuery
+        query[String(kSecReturnAttributes)] = kCFBooleanTrue
+        query[String(kSecMatchLimit)] = kSecMatchLimitAll
+        
+        var result: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &result)
+        
+        var values = [String:String]()
+        if status == errSecSuccess {
+            if let items = result as? [[String: Any]] {
+                for item in items {
+                    
+//                    if let key = item[String(secAttKey)] as? String,
+//                        let value = item[String(kSecValueData)] as? Data, let valueAsString = String(data: value, encoding: .utf8) {
+//                        values[key] = valueAsString
+//                    }
+                }
+            }
+        }
+        
+        return values
+        
+    }
 
     private func deleteSecIdentity() -> OSStatus {
 
-        let query: Dictionary<String, AnyObject> = [
-            String(kSecClass): kSecClassIdentity,
-            String(kSecAttrLabel): server as CFString,
-        ]
+//        let query: Dictionary<String, AnyObject> = [
+//            String(kSecClass): kSecClassIdentity,
+//            String(kSecAttrLabel): server as CFString,
+//        ]
+        
+        let query = defaultSecIdentityQuery
 
         let status = SecItemDelete(query as CFDictionary)
 
+        if debugCertificate {
+            if status == errSecSuccess {
+                debugPrint("["+account+"] delete sec identity")
+            }
+            else {
+                let error = KeychainError(code: status)
+                let errorDescription = "("+String(error.code)+") "+error.description
+                debugPrint("["+account+"] can't delete sec identity , error = "+errorDescription)
+            }
+        }
+        
         return status
 
     }
 
-    func isCertificateInstalled() -> Bool {
+    func isCertificateInstalled(options: [UInt:AnyObject]? = nil) -> Bool {
 
-        return isSecIdentityExist()
-
-    }
-
-    func certificateSecIdentity() -> SecIdentity? {
-
-        return secIdentity()
+        return isSecIdentityExist(options: options)
 
     }
 
-    func installCertificate(from data:Data, and password: String? = nil, completionHandler: ((KeychainError?) -> Void)? = nil) {
+    func certificateSecIdentity(options: [UInt:AnyObject]? = nil) -> SecIdentity? {
+
+        return secIdentity(options: options)
+
+    }
+
+    @objc public func addCertificate(from data:Data, and password: String? = nil, options: [UInt:AnyObject]? = nil) -> Bool {
 
         var status: OSStatus = errSecSuccess
         if let secIdentity = secIdentity(from: data, password: password ?? "", status: &status) {
-
-            if isSecIdentityExist() {
+            if isSecIdentityExist(options: options) {
                 status = deleteSecIdentity()
             }
-
             if status == errSecSuccess {
-                status = addSecIdentity(secIdentity: secIdentity)
+                status = addSecIdentity(secIdentity: secIdentity, options: options)
             }
-
         }
 
-        if let completionHandler = completionHandler {
-            if status == errSecSuccess {
-                completionHandler(nil)
-            }
-            else {
-                completionHandler(KeychainError(code: status))
-            }
+        if status == errSecSuccess {
+            return true
+        }
+        else {
+            return false
         }
 
     }
 
-    func deleteCertificate(completionHandler: ((KeychainError?) -> Void)? = nil) {
+    @objc public func deleteCertificate() -> Bool {
 
         var status: OSStatus = errSecSuccess
         if isSecIdentityExist() {
             status = deleteSecIdentity()
         }
 
-        if let completionHandler = completionHandler {
-            if status == errSecSuccess {
-                completionHandler(nil)
-            }
-            else {
-                completionHandler(KeychainError(code: status))
-            }
+        if status == errSecSuccess {
+            return true
+        }
+        else {
+            return false
         }
 
     }
