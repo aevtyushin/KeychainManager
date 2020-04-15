@@ -358,7 +358,8 @@ extension KeychainManager {
         case accessControlFlags = 4
         case synchronizable = 5
         case useOperationPrompt = 6
-        case defaultValue = 99
+        case defaultValue = 98
+        case forceDelete = 99
     }
     
     private var debugValues: Bool {
@@ -553,6 +554,12 @@ extension KeychainManager {
         guard let value = value else {
             deleteValue(for: key)
             return
+        }
+        
+        if let options = options {
+            if let forceDelete = options[KeychainValueOption.forceDelete.rawValue] as? Bool, forceDelete {
+                deleteValue(for: key)
+            }
         }
         
         if valueIsExist(key: key, options: options) {

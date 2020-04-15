@@ -14,7 +14,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        testDefaultValues()
+        testForceDelete()
+        //testDefaultValues()
         //testBiometry()
         //testAccessGroup()
         //testCertificate()
@@ -39,6 +40,34 @@ class ViewController: UIViewController {
         
         //options[KeychainValueOption.defaultValue.rawValue] = "Test Data".data(using: .utf8) as AnyObject
         let dataValue = keychainManager.dataValue(for: "test_data", options: options)
+        
+    }
+    
+    func testForceDelete() {
+        
+        let keychainManager = KeychainManager()
+        keychainManager.allowDebugValues = true
+        
+        var options = [UInt:AnyObject]()
+        
+        if #available(iOS 11.3, *) {
+            options[KeychainValueOption.accessControlFlags.rawValue] = SecAccessControlCreateFlags.biometryCurrentSet as AnyObject
+        }
+        else {
+            options[KeychainValueOption.accessControlFlags.rawValue] = SecAccessControlCreateFlags.devicePasscode as AnyObject
+        }
+        
+        options[KeychainValueOption.forceDelete.rawValue] = true as AnyObject
+        
+        keychainManager.setStringValue(value: "111", for: "tmp_biometry", options: options)
+        
+        DispatchQueue.global(qos: .background).async {
+            options[KeychainValueOption.useOperationPrompt.rawValue] = "Test b" as AnyObject
+            let tmp = keychainManager.stringValue(for: "tmp_biometry", options: options)
+            DispatchQueue.main.async {
+                debugPrint(tmp ?? "nil")
+            }
+        }
         
     }
     
