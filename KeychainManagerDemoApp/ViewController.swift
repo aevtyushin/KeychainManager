@@ -14,12 +14,34 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        testBiometry()
+        testDefaultValues()
+        //testBiometry()
         //testAccessGroup()
         //testCertificate()
         
     }
 
+    func testDefaultValues() {
+        
+        let keychainManager = KeychainManager()
+        keychainManager.deleteAllValues()
+        
+        var options = [UInt:AnyObject]()
+        
+        //options[KeychainValueOption.defaultValue.rawValue] = true as AnyObject
+        let boolValue = keychainManager.boolValue(for: "test_bool", options: options)
+        
+        //options[KeychainValueOption.defaultValue.rawValue] = Date() as AnyObject
+        let dateValue = keychainManager.dateValue(for: "test_date", options: options)
+        
+        //options[KeychainValueOption.defaultValue.rawValue] = "Test" as AnyObject
+        let stringValue = keychainManager.stringValue(for: "test_string", options: options)
+        
+        //options[KeychainValueOption.defaultValue.rawValue] = "Test Data".data(using: .utf8) as AnyObject
+        let dataValue = keychainManager.dataValue(for: "test_data", options: options)
+        
+    }
+    
     func testBiometry() {
         
         //https://medium.com/@alx.gridnev/biometry-protected-entries-in-ios-keychain-6125e130e0d5
@@ -52,7 +74,7 @@ class ViewController: UIViewController {
         }
         
     }
-    
+
     func testAccessGroup() {
         
         let keychainManager = KeychainManager()

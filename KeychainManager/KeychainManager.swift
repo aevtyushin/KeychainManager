@@ -358,6 +358,7 @@ extension KeychainManager {
         case accessControlFlags = 4
         case synchronizable = 5
         case useOperationPrompt = 6
+        case defaultValue = 99
     }
     
     private var debugValues: Bool {
@@ -418,6 +419,11 @@ extension KeychainManager {
             return NSString(string: value).boolValue
         }
         else {
+            if let options = options {
+                if let defaultValue = options[KeychainValueOption.defaultValue.rawValue] as? Bool {
+                    return defaultValue
+                }
+            }
             return false
         }
         
@@ -431,6 +437,11 @@ extension KeychainManager {
             return formatter.date(from: value)
         }
         else {
+            if let options = options {
+                if let defaultValue = options[KeychainValueOption.defaultValue.rawValue] as? Date {
+                    return defaultValue
+                }
+            }
             return nil
         }
         
@@ -442,6 +453,11 @@ extension KeychainManager {
             return String(data: value, encoding: .utf8)
         }
         else {
+            if let options = options {
+                if let defaultValue = options[KeychainValueOption.defaultValue.rawValue] as? String {
+                    return defaultValue
+                }
+            }
             return nil
         }
         
@@ -497,6 +513,11 @@ extension KeychainManager {
             return valueRef as? Data
         }
         else {
+            if let options = options {
+                if let defaultValue = options[KeychainValueOption.defaultValue.rawValue] as? Data {
+                    return defaultValue
+                }
+            }
             return nil
         }
         
