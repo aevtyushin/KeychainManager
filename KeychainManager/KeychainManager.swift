@@ -563,7 +563,7 @@ extension KeychainManager {
         }
         
         if valueIsExist(key: key, options: options) {
-            updateValue(value: value, for: key)
+            updateValue(value: value, for: key, options: options)
         }
         else{
             addValue(value: value, for: key, options: options)
