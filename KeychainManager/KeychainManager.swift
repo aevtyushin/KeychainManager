@@ -535,7 +535,7 @@ extension KeychainManager {
         if let value = value {
             let formatter = DateFormatter()
             formatter.dateFormat = "y-MM-dd H:m:ss.SSSS"
-            setStringValue(value: formatter.string(from: value), for: key)
+            setStringValue(value: formatter.string(from: value), for: key, options: options)
         }
         else {
             setValue(value: nil, for: key, options: options)
