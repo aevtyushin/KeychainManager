@@ -14,9 +14,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        testForceDelete()
+        //testForceDelete()
         //testDefaultValues()
-        //testBiometry()
+        testBiometry()
         //testAccessGroup()
         //testCertificate()
         
@@ -75,32 +75,47 @@ class ViewController: UIViewController {
         
         //https://medium.com/@alx.gridnev/biometry-protected-entries-in-ios-keychain-6125e130e0d5
         
-        let keychainManager = KeychainManager()
-        //keychainManager.itemClass = .genericPassword
+        let keychainManager1 = KeychainManager(server: "mail.ru", account: nil)
+        keychainManager1.allowDebugValues = true
         
-        let allValuesAndKeys = keychainManager.allValuesAndKeys()
-        keychainManager.deleteAllValues()
+        let keychainManager2 = KeychainManager(server: "corp.mail.ru", account: nil)
+        keychainManager2.allowDebugValues = true
         
-        keychainManager.allowDebugValues = true
+        let allValuesAndKeys1 = keychainManager1.allValuesAndKeys()
+        keychainManager1.deleteAllValues()
+        
+        let allValuesAndKeys2 = keychainManager2.allValuesAndKeys()
+        keychainManager2.deleteAllValues()
+        
+        //keychainManager.allowDebugValues = true
         
         var options = [UInt:AnyObject]()
         
-        if #available(iOS 11.3, *) {
-            options[KeychainValueOption.accessControlFlags.rawValue] = SecAccessControlCreateFlags.biometryCurrentSet as AnyObject
-        }
-        else {
-            options[KeychainValueOption.accessControlFlags.rawValue] = SecAccessControlCreateFlags.devicePasscode as AnyObject
-        }
+//        if #available(iOS 11.3, *) {
+//            options[KeychainValueOption.accessControlFlags.rawValue] = SecAccessControlCreateFlags.biometryCurrentSet as AnyObject
+//        }
+//        else {
+//            options[KeychainValueOption.accessControlFlags.rawValue] = SecAccessControlCreateFlags.devicePasscode as AnyObject
+//        }
+        options[KeychainValueOption.accessGroup.rawValue] = "2655J94PWC.com.keychainmanager.demoapp" as AnyObject
+        options[KeychainValueOption.forceDelete.rawValue] = true as AnyObject
         
-        keychainManager.setStringValue(value: "111", for: "tmp_biometry", options: options)
         
-        DispatchQueue.global(qos: .background).async {
-            options[KeychainValueOption.useOperationPrompt.rawValue] = "Test b" as AnyObject
-            let tmp = keychainManager.stringValue(for: "tmp_biometry", options: options)
-            DispatchQueue.main.async {
-                debugPrint(tmp ?? "nil")
-            }
-        }
+        keychainManager1.setStringValue(value: "111", for: "tmp_biometry", options: options)
+        keychainManager2.setStringValue(value: "222", for: "tmp_biometry", options: options)
+        
+        let tmp1 = keychainManager1.stringValue(for: "tmp_biometry", options: options)
+        debugPrint(tmp1 ?? "nil")
+        let tmp2 = keychainManager2.stringValue(for: "tmp_biometry", options: options)
+        debugPrint(tmp2 ?? "nil")
+        
+//        DispatchQueue.global(qos: .background).async {
+//            options[KeychainValueOption.useOperationPrompt.rawValue] = "Test b" as AnyObject
+//            let tmp = keychainManager.stringValue(for: "tmp_biometry", options: options)
+//            DispatchQueue.main.async {
+//                debugPrint(tmp ?? "nil")
+//            }
+//        }
         
     }
 

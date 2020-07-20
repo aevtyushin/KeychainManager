@@ -552,13 +552,13 @@ extension KeychainManager {
     @objc public func setValue(value: Data?, for key: String, options: [UInt:AnyObject]? = nil) {
         
         guard let value = value else {
-            deleteValue(for: key)
+            deleteValue(for: key, options: options)
             return
         }
         
         if let options = options {
             if let forceDelete = options[KeychainValueOption.forceDelete.rawValue] as? Bool, forceDelete {
-                deleteValue(for: key)
+                deleteValue(for: key, options: options)
             }
         }
         
@@ -657,13 +657,35 @@ extension KeychainManager {
         
     }
     
-    @objc public func deleteValue(for key: String) {
+    @objc public func deleteValue(for key: String, options: [UInt:AnyObject]? = nil) {
         
-        let query: Dictionary<String, AnyObject> = [
-            String(kSecClass): secClass,
-            String(kSecAttrAccount): account as CFString,
-            String(secAttKey): key as CFString
-        ]
+//        let query: Dictionary<String, AnyObject> = [
+//            String(kSecClass): secClass,
+//            String(kSecAttrAccount): account as CFString,
+//            String(secAttKey): key as CFString
+//        ]
+        
+        var query = defaultValueQuery
+        query[String(secAttKey)] = key as CFString
+        
+        if let options = options {
+            if var accessGroup = options[KeychainValueOption.accessGroup.rawValue] as? String, !accessGroup.isEmpty {
+                if let teamID = teamID {
+                    accessGroup = teamID+"."+accessGroup
+                }
+                query[String(kSecAttrAccessGroup)] = accessGroup as CFString
+            }
+            if let accessControlFlags = options[KeychainValueOption.accessControlFlags.rawValue] as? SecAccessControlCreateFlags {
+                query.removeValue(forKey: String(kSecAttrAccessible))
+                query[String(kSecAttrAccessControl)] = SecAccessControlCreateWithFlags(kCFAllocatorDefault,
+                                                                                       secAttrAccessible,
+                                                                                       accessControlFlags,
+                                                                                       nil)!
+            }
+            if let synchronizable = options[KeychainValueOption.synchronizable.rawValue] as? Bool {
+                query[String(kSecAttrSynchronizable)] = synchronizable as CFBoolean
+            }
+        }
         
         let status = SecItemDelete(query as CFDictionary)
         
