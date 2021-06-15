@@ -16,9 +16,10 @@ class ViewController: UIViewController {
         
         //testForceDelete()
         //testDefaultValues()
-        testBiometry()
+        //testBiometry()
         //testAccessGroup()
         //testCertificate()
+        testKeys()
         
     }
 
@@ -167,6 +168,97 @@ class ViewController: UIViewController {
         
 //        let resultDelete1 = keychainManager.deleteCertificate()
 //        debugPrint("result delete - "+resultDelete1.description)
+        
+    }
+    
+    func testKeys() {
+        
+        //testKeysDifferentAccounts()
+        
+        
+        
+        return
+        
+        KeychainManager.deleteAll(debug: false)
+        
+        let keychainManager = KeychainManager(server: "test.", account: "user1")
+        keychainManager.allowDebugKeys = true
+        
+        var options = [UInt:AnyObject]()
+        options[KeychainValueOption.keyAlgorithm.rawValue] = SecKeyAlgorithm.ecdsaSignatureMessageX962SHA256 as AnyObject
+        
+        var message = "123456"
+        var messageData = message.data(using: .utf8)!
+        
+        if !keychainManager.isPrivateKeyExist(options: options) {
+            keychainManager.addPrivateKey(options: options)
+        }
+        
+        guard let privateKey1 = keychainManager.privateKey(options: options) else {
+            debugPrint("private key is empty")
+            return
+        }
+        
+        keychainManager.sign(data: messageData, privateKey: privateKey1, options: options,
+                             completion: {(signature, error) in
+                                
+                                if let signature = signature {
+                                    
+                                    debugPrint("sign data \(message), signature is - \(signature.base64EncodedString())")
+                                    
+                                    guard let publicKey1 = keychainManager.publicKey(privateKey: privateKey1) else {
+                                        debugPrint("publicKey key is empty")
+                                        return
+                                    }
+                                    
+//                                    message = "1234567"
+//                                    messageData = message.data(using: .utf8)!
+                                    
+                                    keychainManager.verify(data: messageData, signature: signature, publicKey: publicKey1, options: options,
+                                                           completion: {(result, error) in
+                                                            
+                                                            debugPrint("verify - \(result)")
+                                                            
+                                                           })
+                                    
+                                }
+                                
+                             })
+        
+    }
+    
+    private func testKeysDifferentAccounts() {
+        
+        KeychainManager.deleteAll(debug: false)
+        
+        var options = [UInt:AnyObject]()
+        
+        let keychainManager = KeychainManager(server: "test.com", account: "user1")
+        keychainManager.allowDebugKeys = true
+        
+        if !keychainManager.isPrivateKeyExist(options: options) {
+            keychainManager.addPrivateKey(options: options)
+        }
+        
+        keychainManager.account = "user2"
+        
+        var privateKey2 = keychainManager.privateKey()
+        
+        keychainManager.account = "user1"
+        
+        var privateKey1 = keychainManager.privateKey()
+        
+        keychainManager.account = "user2"
+        
+        if !keychainManager.isPrivateKeyExist(options: options) {
+            keychainManager.addPrivateKey(options: options)
+        }
+        
+        privateKey2 = keychainManager.privateKey()
+        
+        keychainManager.account = "user1"
+        
+        privateKey1 = keychainManager.privateKey()
         
     }
 

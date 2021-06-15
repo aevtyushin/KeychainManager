@@ -95,6 +95,7 @@ open class KeychainManager: NSObject {
     @objc public var allowDebugAccounts = false
     @objc public var allowDebugValues = false
     @objc public var allowDebugCerificates = false
+    @objc public var allowDebugKeys = false
     
     @objc required public init(server: String? = nil, account: String? = nil) {
         
@@ -358,10 +359,14 @@ extension KeychainManager {
         case accessControlFlags = 4
         case synchronizable = 5
         case useOperationPrompt = 6
+        case privateKeyType = 21
+        case privateKeySize = 22
+        case privateKeyTokenID = 23
+        case keyAlgorithm = 24
         case defaultValue = 98
         case forceDelete = 99
     }
-    
+        
     private var debugValues: Bool {
         
         #if DEBUG
@@ -1077,6 +1082,242 @@ extension KeychainManager {
 
 }
 
+//MARK: - Keys
+extension KeychainManager {
+    
+    private var debugKeys: Bool {
+
+        #if DEBUG
+            return allowDebugKeys
+        #else
+            return false
+        #endif
+
+    }
+    
+    private var defaultPrivateKeyQuery: Dictionary<String, AnyObject> {
+        
+        var query: Dictionary<String, AnyObject> = [
+            String(kSecClass): kSecClassKey,
+            String(kSecAttrKeyType): kSecAttrKeyTypeEC,
+            String(kSecAttrApplicationTag): account as CFString,
+        ]
+        
+        if itemClass == .internetPassword {
+            query[String(kSecAttrApplicationLabel)] = server as CFString
+        }
+        
+        return query
+        
+    }
+    
+    @objc public func isPrivateKeyExist(options: [UInt:AnyObject]? = nil) -> Bool {
+        return privateKey(options: options) != nil
+    }
+    
+    @objc public func privateKey(options: [UInt:AnyObject]? = nil) -> SecKey? {
+
+        var query = defaultPrivateKeyQuery
+        query[String(kSecReturnRef)] = kCFBooleanTrue
+        query[String(kSecMatchLimit)] = kSecMatchLimitOne
+
+        if let options = options {
+            if let privateKeyType = options[KeychainValueOption.privateKeyType.rawValue] {
+                query[String(kSecAttrKeyType)] = privateKeyType
+            }
+            if var accessGroup = options[KeychainValueOption.accessGroup.rawValue] as? String, !accessGroup.isEmpty {
+                if let teamID = teamID {
+                    accessGroup = teamID+"."+accessGroup
+                }
+                query[String(kSecAttrAccessGroup)] = accessGroup as CFString
+            }
+            if let accessControlFlags = options[KeychainValueOption.accessControlFlags.rawValue] as? SecAccessControlCreateFlags {
+                query.removeValue(forKey: String(kSecAttrAccessible))
+                query[String(kSecAttrAccessControl)] = SecAccessControlCreateWithFlags(kCFAllocatorDefault,
+                                                                                       secAttrAccessible,
+                                                                                       accessControlFlags,
+                                                                                       nil)!
+            }
+        }
+        
+        var keyRef: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &keyRef)
+
+        if debugKeys {
+            if status == errSecSuccess {
+                debugPrint("["+account+"] get private key")
+            }
+            else {
+                let error = KeychainError(code: status)
+                let errorDescription = "("+String(error.code)+") "+error.description
+                debugPrint("["+account+"] can't get private key , error = "+errorDescription)
+            }
+        }
+                
+        if status == errSecSuccess, keyRef != nil {
+            return (keyRef as! SecKey)
+        }
+        else{
+            return nil
+        }
+
+    }
+    
+    @objc public func addPrivateKey(options: [UInt:AnyObject]? = nil) -> SecKey? {
+        
+        guard !isPrivateKeyExist(options: options) else {
+            if debugKeys {
+                debugPrint("["+account+"] can't add private key , error = private key already exists")
+            }
+            return nil
+        }
+        
+        var query : Dictionary<String, AnyObject> = [
+            String(kSecAttrKeyType): kSecAttrKeyTypeEC,
+            String(kSecAttrKeySizeInBits): 256 as AnyObject,
+            String(kSecAttrTokenID): kSecAttrTokenIDSecureEnclave,
+        ]
+
+        var privateKeyAtts = defaultPrivateKeyQuery
+        privateKeyAtts.removeValue(forKey: String(kSecClass))
+        privateKeyAtts.removeValue(forKey: String(kSecAttrKeyType))
+        privateKeyAtts[String(kSecAttrIsPermanent)] = kCFBooleanTrue
+
+        if let options = options {
+            
+            if let privateKeyType = options[KeychainValueOption.privateKeyType.rawValue] {
+                query[String(kSecAttrKeyType)] = privateKeyType
+            }
+            if let privateKeySize = options[KeychainValueOption.privateKeySize.rawValue] {
+                query[String(kSecAttrKeySizeInBits)] = privateKeySize
+            }
+            if let privateKeyTokenID = options[KeychainValueOption.privateKeyTokenID.rawValue] {
+                query[String(kSecAttrTokenID)] = privateKeyTokenID
+            }
+            
+            if var accessGroup = options[KeychainValueOption.accessGroup.rawValue] as? String, !accessGroup.isEmpty {
+                if let teamID = teamID {
+                    accessGroup = teamID+"."+accessGroup
+                }
+                privateKeyAtts[String(kSecAttrAccessGroup)] = accessGroup as CFString
+            }
+            if let accessControlFlags = options[KeychainValueOption.accessControlFlags.rawValue] as? SecAccessControlCreateFlags {
+                privateKeyAtts.removeValue(forKey: String(kSecAttrAccessible))
+                privateKeyAtts[String(kSecAttrAccessControl)] = SecAccessControlCreateWithFlags(kCFAllocatorDefault,
+                                                                                       secAttrAccessible,
+                                                                                       accessControlFlags,
+                                                                                       nil)!
+            }
+        }
+        
+        query[String(kSecPrivateKeyAttrs)] = privateKeyAtts as AnyObject
+
+        var error: Unmanaged<CFError>?
+        let privateKey = SecKeyCreateRandomKey(query as CFDictionary, &error)
+        
+        if debugKeys {
+            if privateKey != nil {
+                debugPrint("["+account+"] add private key")
+            }
+            else {
+                if let error = error  {
+                    let errorDescription = error.takeRetainedValue().localizedDescription
+                    debugPrint("["+account+"] can't create private key , error = "+errorDescription)
+                }
+            }
+        }
+        
+        return privateKey
+
+    }
+    
+    @objc public func publicKey(privateKey: SecKey) -> SecKey? {
+        
+        return SecKeyCopyPublicKey(privateKey)
+        
+    }
+    
+    @objc public func sign(data: Data, privateKey: SecKey, options: [UInt:AnyObject], completion: @escaping (Data?, Error?) -> ()) {
+        
+        guard let algorithm = options[KeychainValueOption.keyAlgorithm.rawValue] as? SecKeyAlgorithm  else {
+            let error = signError(localizedDescription: "key algorithm is empty")
+            if debugKeys {
+                debugPrint("["+account+"] can't sign , error = "+error.localizedDescription)
+            }
+            completion(nil, error)
+            return
+        }
+        
+        guard SecKeyIsAlgorithmSupported(privateKey, .sign, algorithm) else {
+            let error = signError(localizedDescription: "key algorithm is not supported")
+            if debugKeys {
+                debugPrint("["+account+"] can't sign , error = "+error.localizedDescription)
+            }
+            completion(nil, error)
+            return
+        }
+        
+        var error: Unmanaged<CFError>?
+        let signature = SecKeyCreateSignature(privateKey,
+                                              algorithm,
+                                              data as CFData,
+                                              &error) as Data?
+        
+        if let error = error?.takeRetainedValue() {
+            if debugKeys {
+                let errorDescription = error.localizedDescription
+                debugPrint("["+account+"] can't sign , error = "+errorDescription)
+            }
+            completion(signature, error)
+        }
+        else {
+            completion(signature, nil)
+        }
+        
+    }
+    
+    @objc public func verify(data: Data, signature: Data, publicKey: SecKey, options: [UInt:AnyObject], completion: @escaping (Bool, Error?) -> ()) {
+        
+        guard let algorithm = options[KeychainValueOption.keyAlgorithm.rawValue] as? SecKeyAlgorithm  else {
+            let error = signError(localizedDescription: "key algorithm is empty")
+            if debugKeys {
+                debugPrint("["+account+"] can't verify , error = "+error.localizedDescription)
+            }
+            completion(false, error)
+            return
+        }
+        
+        guard SecKeyIsAlgorithmSupported(publicKey, .verify, algorithm) else {
+            let error = signError(localizedDescription: "key algorithm is not supported")
+            if debugKeys {
+                debugPrint("["+account+"] can't verify , error = "+error.localizedDescription)
+            }
+            completion(false, error)
+            return
+        }
+        
+        var error: Unmanaged<CFError>?
+        let result = SecKeyVerifySignature(publicKey,
+                                           algorithm,
+                                           data as CFData,
+                                           signature as CFData,
+                                           &error)
+                
+        if let error = error?.takeRetainedValue() {
+            if debugKeys {
+                let errorDescription = error.localizedDescription
+                debugPrint("["+account+"] can't verify , error = "+errorDescription)
+            }
+            completion(result, error)
+        }
+        else {
+            completion(result, nil)
+        }
+        
+    }
+    
+}
+
 class KeychainError: LocalizedError {
     
     var code: OSStatus = noErr
@@ -1099,6 +1340,18 @@ class KeychainError: LocalizedError {
     convenience init(code: OSStatus){
         self.init()
         self.code = code
+    }
+    
+}
+
+class signError: LocalizedError {
+    
+    var code: Int = 0
+    var localizedDescription: String = ""
+    
+    convenience init(localizedDescription: String){
+        self.init()
+        self.localizedDescription = localizedDescription
     }
     
 }
